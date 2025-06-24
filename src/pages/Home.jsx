@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Home = ({ onNavigate }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 to-blue-800 text-white flex flex-col relative overflow-hidden font-poppin" >
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 to-blue-800 text-white flex flex-col relative overflow-hidden font-poppin">
       {/* Background stars/dots */}
       <div className="absolute inset-0">
         {[...Array(50)].map((_, i) => (
@@ -37,24 +37,21 @@ const Home = ({ onNavigate }) => {
               Sign Up
             </button>
           </Link> */}
-          <Link to="/signup">
-          <button className="bg-teal-400 hover:bg-teal-600 text-white font-bold py-2 px-10   rounded-md transition duration-300 shadow-lg">
-            LOGIN
+          <Link to="/login">
+            <button className="bg-teal-400 hover:bg-teal-600 text-white font-bold py-2 px-10   rounded-md transition duration-300 shadow-lg">
+              LOGIN
             </button>
-            </Link>
+          </Link>
         </nav>
       </header>
 
       {/* Main Content Area */}
       <main className="relative z-10 flex-grow flex items-center justify-center p-6 md:p-12 text-center">
         <div className="max-w-3xl space-y-6">
-          {/* <h1 className="text-4xl md:text-5xl font-bold text-teal-400">
-            SHIELDUP
-          </h1> */}
-          <h2 className="text-2xl md:text-3xl font-semibold leading-relaxed">
-            Empowering Communities with{" "}
-            <span className="text-teal-400">Proactive Security Solutions</span>
-          </h2>
+          <span className="text-4xl md:text-3xl font-semibold leading-relaxed">
+            IoT based Home Early
+            <span className="text-teal-400 pl-3">Warning system</span>
+          </span>
           <p className="text-lg md:text-xl leading-relaxed text-gray-300">
             Lorem Ipsum is simply dummy text of the printing and type setting
             industry. Lorem Ipsum has been the industry's standard dummy text

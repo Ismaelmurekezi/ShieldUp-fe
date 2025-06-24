@@ -96,7 +96,7 @@ const Report = () => {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Weekly Report Card */}
-          <div className="bg-green-100 p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div className="bg-[#B6FFA1] p-6 rounded-lg shadow-md flex items-center justify-between">
             <div>
               <p className="text-xl font-semibold text-gray-700">
                 Weekly Report
@@ -119,7 +119,7 @@ const Report = () => {
           </div>
 
           {/* Total Users Card */}
-          <div className="bg-yellow-100 p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div className="bg-[#FFFC99] p-6 rounded-lg shadow-md flex items-center justify-between">
             <div>
               <p className="text-xl font-semibold text-gray-700">Total Users</p>
               <p className="text-3xl font-bold text-yellow-700 mt-2">16</p>

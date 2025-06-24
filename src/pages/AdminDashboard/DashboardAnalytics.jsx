@@ -27,7 +27,7 @@ const DashboardAnalytics = () => {
         "Oct",
       ],
     },
-    colors: ["#4CAF50", "#00BCD4", "#FFC107"], // Green, Cyan, Amber for Net Profit, Revenue, Free Cash Flow
+    colors: ["#4CAF50", "#00BCD4", "#FFC107"], 
     plotOptions: {
       bar: {
         horizontal: false,
@@ -45,7 +45,7 @@ const DashboardAnalytics = () => {
     },
     yaxis: {
       title: {
-        text: "$ (Thousands)",
+        text: "Kind of theft",
       },
     },
     fill: {
@@ -54,7 +54,7 @@ const DashboardAnalytics = () => {
     tooltip: {
       y: {
         formatter: function (val) {
-          return "$ " + val + " thousands";
+          return  val + " ";
         },
       },
     },
@@ -62,16 +62,16 @@ const DashboardAnalytics = () => {
 
   const barChartSeries = [
     {
-      name: "Net Profit",
-      data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
+      name: "Burglaries",
+      data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 63, 60, 66],
     },
     {
-      name: "Revenue",
-      data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
+      name: "Armed Robberies",
+      data: [76, 85, 101, 98, 87, 105, 91, 114, 94, 13, 50, 26],
     },
     {
-      name: "Free Cash Flow",
-      data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
+      name: "Thefts",
+      data: [35, 41, 36, 26, 45, 48, 52, 53, 41, 21, 6, 16],
     },
   ];
 
@@ -80,7 +80,7 @@ const DashboardAnalytics = () => {
     chart: {
       type: "donut",
     },
-    labels: ["Burglary", "Normal", "Intense"],
+    labels: ["Burglary", "Armed robbery", "Theft"],
     colors: ["#EF4444", "#3B82F6", "#F59E0B"], // Red, Blue, Orange
     responsive: [
       {
@@ -143,22 +143,27 @@ const DashboardAnalytics = () => {
     },
     xaxis: {
       categories: [
-        "Feb '17",
-        "Mar '17",
-        "Mar '17",
-        "Apr '17",
-        "Apr '17",
-        "May '17",
-        "May '17",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
       ],
-      tickAmount: 6, // Number of ticks on x-axis
+      tickAmount: 12  , // Number of ticks on x-axis
       labels: {
         rotate: -45,
       },
     },
     yaxis: {
       title: {
-        text: "Price",
+        text: "Theft Occur",
       },
       min: 50, // Match design's y-axis start
       max: 250, // Match design's y-axis end
@@ -197,79 +202,12 @@ const DashboardAnalytics = () => {
 
   const stockPriceSeries = [
     {
-      name: "Price",
+      name: "Theft",
       data: [
-        150, 200, 180, 160, 170, 190, 175, 165, 155, 145, 130, 120, 110, 125,
-        140, 150, 160,
-      ], // Sample data based on trend
+        150, 200, 180, 160, 170, 190, 175, 165, 155, 145, 130, 120
+      ], 
     },
-  ];
-
-  // Data for Product A & B Bar/Column Chart
-  const productChartOptions = {
-    chart: {
-      id: "product-chart",
-      toolbar: {
-        show: false,
-      },
-    },
-    xaxis: {
-      categories: ["2008", "2009", "2010", "2011", "2012", "2013", "2014"],
-    },
-    colors: ["#22C55E", "#3B82F6"], // Green for Product A, Blue for Product B
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "55%",
-        endingShape: "rounded",
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ["transparent"],
-    },
-    yaxis: {
-      title: {
-        text: "", // No y-axis title in the design
-      },
-      min: 0,
-      max: 9000,
-    },
-    fill: {
-      opacity: 1,
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return val + " units"; // Example unit
-        },
-      },
-    },
-    legend: {
-      position: "top",
-      horizontalAlign: "left",
-      offsetY: -10,
-      markers: {
-        width: 12,
-        height: 12,
-        radius: 4,
-      },
-    },
-  };
-
-  const productChartSeries = [
-    {
-      name: "Product A",
-      data: [4500, 7500, 8000, 5000, 7000, 4000, 6800],
-    },
-    {
-      name: "Product B",
-      data: [3500, 4500, 6500, 3000, 4800, 3200, 4500],
-    },
+   
   ];
 
   return (
@@ -278,7 +216,7 @@ const DashboardAnalytics = () => {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Weekly Report Card */}
-          <div className="bg-green-100 p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div className="bg-[#B6FFA1] p-6 rounded-lg shadow-md flex items-center justify-between">
             <div>
               <p className="text-xl font-semibold text-gray-700">
                 Weekly Report
@@ -331,8 +269,8 @@ const DashboardAnalytics = () => {
         {/* Bottom Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              Stock Price Movement
+            <h3 className="text-2xl text-primary font-semibold mb-4">
+              The Overall Monthly Report
             </h3>
             <Chart
               options={stockPriceOptions}
@@ -342,17 +280,7 @@ const DashboardAnalytics = () => {
             />
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              Product A & Product B
-            </h3>{" "}
-            <Chart
-              options={productChartOptions}
-              series={productChartSeries}
-              type="bar"
-              height={300}
-            />
-          </div>
+
         </div>
       </div>
     </DashboardLayout>

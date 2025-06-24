@@ -102,7 +102,7 @@ const Dashboard = () => {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Weekly Report Card */}
-          <div className="bg-green-100 p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div className="bg-[#B6FFA1] p-6 rounded-lg shadow-md flex items-center justify-between">
             <div>
               <p className="text-xl font-semibold text-gray-700">
                 Weekly Report
@@ -126,7 +126,7 @@ const Dashboard = () => {
           </div>
 
           {/* Total Users Card */}
-          <div className="bg-yellow-100 p-6 rounded-lg shadow-md flex items-center justify-between">
+          <div className="bg-[#FFFC99] p-6 rounded-lg shadow-md flex items-center justify-between">
             <div>
               <p className="text-xl font-semibold text-gray-700">Total Users</p>
               <p className="text-3xl font-bold text-yellow-700 mt-2">16</p>
@@ -229,50 +229,6 @@ const Dashboard = () => {
               </tbody>
             </table>
           </div>
-          {/* Pagination
-          <div className="mt-4 flex justify-end items-center space-x-2 text-gray-600">
-            <button className="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100">
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 19l-7-7 7-7"
-                ></path>
-              </svg>
-            </button>
-            <span className="px-3 py-1 bg-teal-500 text-white rounded-md">
-              1
-            </span>
-            <button className="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100">
-              2
-            </button>
-            <button className="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100">
-              3
-            </button>
-            <button className="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100">
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                ></path>
-              </svg>
-            </button>
-          </div> */}
         </div>
       </div>
     </DashboardLayout>

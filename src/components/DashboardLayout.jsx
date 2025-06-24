@@ -18,7 +18,7 @@ const DashboardLayout = ({ children }) => {
       <aside className="w-64 bg-white shadow-md flex flex-col justify-between py-6">
         <div>
           {/* Sidebar Header/Logo */}
-          <Link to='/' className="flex items-center px-6 mb-8">
+          <Link to="/" className="flex items-center px-6 mb-8">
             <img
               src="/logo.png"
               alt="ShieldUp Logo"
@@ -37,7 +37,7 @@ const DashboardLayout = ({ children }) => {
                   to="/dashboard"
                   className={`flex items-center px-6 py-3 text-lg font-medium transition-colors duration-200 ${
                     location.pathname === "/dashboard"
-                      ? "text-teal-600 bg-teal-50 bg-opacity-80 border-r-4 border-teal-600"
+                      ? "text-green-700 bg-[#B6FFA1] bg-opacity-80 border-r-4 border-teal-600"
                       : "text-gray-600 hover:text-teal-600 hover:bg-gray-50"
                   }`}
                 >
@@ -51,7 +51,7 @@ const DashboardLayout = ({ children }) => {
                   to="/dashboard/report"
                   className={`flex items-center px-6 py-3 text-lg font-medium transition-colors duration-200 ${
                     location.pathname === "/dashboard/report"
-                      ? "text-teal-600 bg-teal-50 bg-opacity-80 border-r-4 border-teal-600"
+                      ? "text-green-700 bg-[#B6FFA1] bg-opacity-80 border-r-4 border-teal-600"
                       : "text-gray-600 hover:text-teal-600 hover:bg-gray-50"
                   }`}
                 >
@@ -69,7 +69,7 @@ const DashboardLayout = ({ children }) => {
                   to="/dashboard/analytics"
                   className={`flex items-center px-6 py-3 text-lg font-medium transition-colors duration-200 ${
                     location.pathname === "/dashboard/analytics"
-                      ? "text-teal-600 bg-teal-50 bg-opacity-80 border-r-4 border-teal-600"
+                      ? "text-green-700 bg-[#B6FFA1] bg-opacity-80 border-r-4 border-teal-600"
                       : "text-gray-600 hover:text-teal-600 hover:bg-gray-50"
                   }`}
                 >
