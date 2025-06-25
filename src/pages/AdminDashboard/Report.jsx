@@ -1,6 +1,4 @@
-// src/pages/DashboardHome.jsx
-import React from "react";
-import DashboardLayout from "../../components/DashboardLayout";
+// THEFT REPORT FOR ADMIN 
 import {
   TrendingUp,
   Users,
@@ -91,7 +89,7 @@ const dummyReports = [
 
 const Report = () => {
   return (
-    <DashboardLayout>
+    
       <div className="pb-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -277,7 +275,7 @@ const Report = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+   
   );
 };
 

@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, AlertTriangle, Loader2 } from "lucide-react";
@@ -8,7 +7,7 @@ import deviceImage from "../assets/ShieldUp2.jpeg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error, clearError, isAuthenticated } =
+  const { login, isLoading, error, clearError, isAuthenticated, user } =
     useAuthStore();
 
   const [formData, setFormData] = useState({
@@ -19,11 +18,11 @@ const Login = () => {
   const [validationErrors, setValidationErrors] = useState({});
 
   // Redirect if already authenticated
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate("/dashboard");
-  //   }
-  // }, [isAuthenticated, navigate]);
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, user, navigate]);
 
   // Clear errors when component mounts
   useEffect(() => {

@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -30,24 +29,11 @@ const Register = () => {
     username: "",
     district: "",
     sector: "",
-    role: "admin", 
+    role: "admin",
   });
 
   const [validationErrors, setValidationErrors] = useState({});
   const [showSuccess, setShowSuccess] = useState(false);
-
-  // Check if user is authenticated and is SuperAdmin
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     navigate("/login");
-  //     return;
-  //   }
-
-  //   if (!isSuperAdmin()) {
-  //     navigate("/dashboard");
-  //     return;
-  //   }
-  // }, [isAuthenticated, isSuperAdmin, navigate]);
 
   // Clear errors when component mounts
   useEffect(() => {
@@ -124,7 +110,7 @@ const Register = () => {
         username: "",
         district: "",
         sector: "",
-        // role: "admin",
+        role: "admin",
       });
 
       // Hide success message after 3 seconds
@@ -278,21 +264,6 @@ const Register = () => {
                 </p>
               )}
             </div>
-
-            {/* Role Selection */}
-            {/* <div className="relative">
-              <select
-                name="role"
-                className={getInputClasses("role")}
-                value={formData.role}
-                onChange={handleInputChange}
-                disabled={isLoading}
-              >
-                <option value="admin">Admin</option>
-                <option value="SuperAdmin">Super Admin</option>
-              </select>
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            </div> */}
 
             {/* Register Button */}
             <button
