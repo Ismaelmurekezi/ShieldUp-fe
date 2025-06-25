@@ -1,10 +1,21 @@
+"use client";
+
+import { useEffect } from "react";
 import Chart from "react-apexcharts";
 import { TrendingUp, Users } from "lucide-react";
 import useAuthStore from "../../store/authStore";
 
 const DashboardAnalytics = () => {
-  const { user, isSuperAdmin } = useAuthStore();
+  const { user, isSuperAdmin, userAnalytics, fetchUserAnalytics, isLoading } =
+    useAuthStore();
   const isSuper = isSuperAdmin();
+
+  // Fetch analytics data on component mount
+  useEffect(() => {
+    if (isSuper) {
+      fetchUserAnalytics();
+    }
+  }, [isSuper]);
 
   // Admin Analytics - Theft Related Charts
   const AdminAnalytics = () => {
@@ -119,16 +130,8 @@ const DashboardAnalytics = () => {
         zoom: { enabled: false },
       },
       xaxis: {
-        categories: [
-          "Mon",
-          "Tue",
-          "Wed",
-          "Thur",
-          "Fri",
-          "Sat",
-          "Sun",
-        ],
-        tickAmount: 12,
+        categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        tickAmount: 7,
         labels: { rotate: -45 },
       },
       yaxis: {
@@ -191,6 +194,7 @@ const DashboardAnalytics = () => {
                 Monthly Thefts
               </p>
               <p className="text-3xl font-bold text-teal-700 mt-2">89</p>
+          
             </div>
             <TrendingUp size={35} className="text-gray-400" />
           </div>
@@ -228,7 +232,7 @@ const DashboardAnalytics = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-2xl text-primary font-semibold mb-4">
-              Monthly Theft Trend
+              Weekly Theft Trend
             </h3>
             <Chart
               options={lineChartOptions}
@@ -244,6 +248,61 @@ const DashboardAnalytics = () => {
 
   // SuperAdmin Analytics - User Related Charts
   const SuperAdminAnalytics = () => {
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
+        </div>
+      );
+    }
+
+    // Generate month labels for the last 12 months
+    const generateMonthLabels = () => {
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const now = new Date();
+      const labels = [];
+
+      for (let i = 11; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        labels.push(
+          `${months[date.getMonth()]} ${date
+            .getFullYear()
+            .toString()
+            .slice(-2)}`
+        );
+      }
+
+      return labels;
+    };
+
+    // Generate day labels for the last 7 days
+    const generateDayLabels = () => {
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const now = new Date();
+      const labels = [];
+
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(now);
+        date.setDate(now.getDate() - i);
+        labels.push(`${days[date.getDay()]} ${date.getDate()}`);
+      }
+
+      return labels;
+    };
+
     // Data for User Analytics
     const userBarChartOptions = {
       chart: {
@@ -251,27 +310,14 @@ const DashboardAnalytics = () => {
         toolbar: { show: false },
       },
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
+        categories: generateMonthLabels(),
         tickAmount: 12,
         labels: { rotate: -45 },
       },
       yaxis: {
         title: { text: "Number of Users" },
         min: 0,
-        max: 50,
+        max: Math.max(...(userAnalytics?.monthlyData || [0])) + 5,
         tickAmount: 5,
       },
       colors: ["#4CAF50"],
@@ -299,7 +345,7 @@ const DashboardAnalytics = () => {
     const userBarChartSeries = [
       {
         name: "New Users",
-        data: [5, 8, 12, 7, 15, 10, 18, 14, 20, 16, 22, 25],
+        data: userAnalytics?.monthlyData || [],
       },
     ];
 
@@ -311,14 +357,14 @@ const DashboardAnalytics = () => {
         zoom: { enabled: false },
       },
       xaxis: {
-        categories: ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"],
-        tickAmount: 12,
+        categories: generateDayLabels(),
+        tickAmount: 7,
         labels: { rotate: -45 },
       },
       yaxis: {
-        title: { text: "Total Users" },
+        title: { text: "Daily New Users" },
         min: 0,
-        max: 100,
+        max: Math.max(...(userAnalytics?.weeklyData || [0])) + 2,
         tickAmount: 5,
       },
       colors: ["#3B82F6"],
@@ -334,7 +380,9 @@ const DashboardAnalytics = () => {
         },
       },
       tooltip: {
-        x: { format: "dd/MM/yy HH:mm" },
+        y: {
+          formatter: (val) => val + " users",
+        },
       },
       markers: { size: 5 },
       fill: {
@@ -350,8 +398,8 @@ const DashboardAnalytics = () => {
 
     const userLineChartSeries = [
       {
-        name: "Total Users",
-        data: [5, 13, 25, 32, 47, 57],
+        name: "Daily New Users",
+        data: userAnalytics?.weeklyData || [],
       },
     ];
 
@@ -364,7 +412,10 @@ const DashboardAnalytics = () => {
               <p className="text-xl font-semibold text-gray-700">
                 Weekly Users
               </p>
-              <p className="text-3xl font-bold text-green-700 mt-2">5</p>
+              <p className="text-3xl font-bold text-green-700 mt-2">
+                {userAnalytics?.weeklyUsers || 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">Last 7 days</p>
             </div>
             <Users size={35} className="text-gray-400" />
           </div>
@@ -374,7 +425,21 @@ const DashboardAnalytics = () => {
               <p className="text-xl font-semibold text-gray-700">
                 Monthly Users
               </p>
-              <p className="text-3xl font-bold text-teal-700 mt-2">12</p>
+              <p className="text-3xl font-bold text-teal-700 mt-2">
+                {userAnalytics?.monthlyUsers || 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">Last 30 days</p>
+            </div>
+            <Users size={35} className="text-gray-400" />
+          </div>
+
+          <div className="bg-[#FFFC99] p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+              <p className="text-xl font-semibold text-gray-700">Total Users</p>
+              <p className="text-3xl font-bold text-yellow-700 mt-2">
+                {userAnalytics?.totalUsers || 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">All time</p>
             </div>
             <Users size={35} className="text-gray-400" />
           </div>
@@ -387,7 +452,7 @@ const DashboardAnalytics = () => {
           {/* User Bar Chart */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-               Monthly Users
+              Monthly User Registrations
             </h3>
             <Chart
               options={userBarChartOptions}
@@ -400,7 +465,7 @@ const DashboardAnalytics = () => {
           {/* User Growth Line Chart */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              Weekly Users
+              Daily User Registrations (Last 7 Days)
             </h3>
             <Chart
               options={userLineChartOptions}
@@ -410,6 +475,45 @@ const DashboardAnalytics = () => {
             />
           </div>
         </div>
+
+        {/* Additional Analytics */}
+        {userAnalytics?.userGrowthRate && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Growth Rate
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Weekly Growth:</span>
+                  <span
+                    className={`font-semibold ${
+                      userAnalytics.userGrowthRate.weekly > 0
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {userAnalytics.userGrowthRate.weekly > 0 ? "+" : ""}
+                    {userAnalytics.userGrowthRate.weekly}%
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Monthly Growth:</span>
+                  <span
+                    className={`font-semibold ${
+                      userAnalytics.userGrowthRate.monthly > 0
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {userAnalytics.userGrowthRate.monthly > 0 ? "+" : ""}
+                    {userAnalytics.userGrowthRate.monthly}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
