@@ -5,9 +5,6 @@ import { Users, Eye, Trash2, MoreVertical } from "lucide-react";
 import useAuthStore from "../../store/authStore";
 import UserDetailsModal from "../../components/UserDetailModal";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
-// import UserDetailsModal from "../../components/UserDetailsModal";
-// import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
-
 
 const UserReport = () => {
   const {
