@@ -3,11 +3,14 @@ import { persist } from "zustand/middleware";
 import userService from "../services/userService";
 import messageService from "../services/messageService";
 
+const API_BASE_URL = "http://localhost:5000";
+
 const useAuthStore = create(
   persist(
     (set, get) => ({
       // Auth state
       user: null,
+      token: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
@@ -24,6 +27,7 @@ const useAuthStore = create(
 
       // Message management state
       messages: [],
+      messageAnalytics: null,
       messagePagination: {
         currentPage: 1,
         totalPages: 1,
@@ -43,31 +47,119 @@ const useAuthStore = create(
       },
 
       // Auth actions
-      setUser: (user) => set({ user, isAuthenticated: !!user }),
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
       clearError: () => set({ error: null }),
 
-      logout: () => {
-        set({
-          user: null,
-          isAuthenticated: false,
-          users: [],
-          userAnalytics: null,
-          messages: [],
-          pagination: {
-            currentPage: 1,
-            totalPages: 1,
-            totalUsers: 0,
-            limit: 10,
-          },
-          messagePagination: {
-            currentPage: 1,
-            totalPages: 1,
-            totalMessages: 0,
-            limit: 10,
-          },
-        });
+      login: async (email, password) => {
+        set({ isLoading: true, error: null });
+
+        try {
+          const response = await fetch("http://localhost:5000/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            set({
+              user: data.user,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
+            return { success: true };
+          } else {
+            set({
+              error: data.message || "Login failed",
+              isLoading: false,
+            });
+            return { success: false, message: data.message };
+          }
+        } catch (error) {
+          const errorMessage = error.message || "Network error";
+          set({
+            error: errorMessage,
+            isLoading: false,
+          });
+          return { success: false, message: errorMessage };
+        }
+      },
+
+      register: async (userData) => {
+        set({ isLoading: true, error: null });
+
+        try {
+          const response = await fetch("http://localhost:5000/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(userData),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            set({
+              isLoading: false,
+              error: null,
+            });
+            // Refresh users list after successful registration
+            get().fetchUsers();
+            return { success: true };
+          } else {
+            set({
+              error: data.message || "Registration failed",
+              isLoading: false,
+            });
+            return { success: false, message: data.message };
+          }
+        } catch (error) {
+          const errorMessage = error.message || "Network error";
+          set({
+            error: errorMessage,
+            isLoading: false,
+          });
+          return { success: false, message: errorMessage };
+        }
+      },
+
+      logout: async () => {
+        set({ isLoading: true });
+
+        try {
+          await fetch("http://localhost:5000/logout", {
+            method: "POST",
+            credentials: "include",
+          });
+        } catch (error) {
+          console.error("Logout error:", error);
+        } finally {
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null,
+            users: [],
+            userAnalytics: null,
+            messages: [],
+            messageAnalytics: null,
+            messagePagination: {
+              currentPage: 1,
+              totalPages: 1,
+              totalMessages: 0,
+              limit: 10,
+            },
+          });
+        }
       },
 
       // User management actions
@@ -200,11 +292,28 @@ const useAuthStore = create(
           return { success: false, message: error.message };
         }
       },
+
+      fetchMessageAnalytics: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const result = await messageService.getMessageAnalytics();
+          if (result.success) {
+            set({ messageAnalytics: result.data, isLoading: false });
+          } else {
+            set({ error: result.message, isLoading: false });
+          }
+          return result;
+        } catch (error) {
+          set({ error: error.message, isLoading: false });
+          return { success: false, message: error.message };
+        }
+      },
     }),
     {
       name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
+        token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
     }
