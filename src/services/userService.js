@@ -1,4 +1,6 @@
-const API_BASE_URL = "http://localhost:5000";
+// const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 class UserService {
   // Get authorization headers
@@ -21,13 +23,57 @@ class UserService {
       );
 
       const data = await response.json();
+      // console.log("Raw API response:", data);
 
       if (response.ok) {
-        return { success: true, data };
+        // Check if the response has the expected structure
+        if (data.users && data.pagination) {
+          // Backend returns { users: [...], pagination: {...} }
+          return {
+            success: true,
+            data: {
+              users: data.users,
+              pagination: data.pagination,
+            },
+          };
+        } else if (Array.isArray(data)) {
+          // Backend returns direct array of users
+          return {
+            success: true,
+            data: {
+              users: data,
+              pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(data.length / limit),
+                totalUsers: data.length,
+                limit: limit,
+              },
+            },
+          };
+        } else {
+          // Fallback - treat data as users array
+          console.warn("Unexpected response structure:", data);
+          return {
+            success: true,
+            data: {
+              users: data || [],
+              pagination: {
+                currentPage: page,
+                totalPages: 1,
+                totalUsers: Array.isArray(data) ? data.length : 0,
+                limit: limit,
+              },
+            },
+          };
+        }
       } else {
-        return { success: false, message: data.message };
+        return {
+          success: false,
+          message: data.message || "Failed to fetch users",
+        };
       }
     } catch (error) {
+      console.error("Error in getAllUsers:", error);
       return { success: false, message: error.message };
     }
   }
@@ -74,10 +120,10 @@ class UserService {
     }
   }
 
-  // Get user analytics/statistics
+  // Get user analytics/statistics - use dedicated endpoint
   async getUserAnalytics() {
     try {
-      const response = await fetch(`${API_BASE_URL}/users`, {
+      const response = await fetch(`${API_BASE_URL}/analytics/users`, {
         method: "GET",
         headers: this.getAuthHeaders(),
         credentials: "include",
@@ -86,18 +132,17 @@ class UserService {
       const data = await response.json();
 
       if (response.ok) {
-        // Process data for analytics
-        const analytics = this.processUserAnalytics(data);
-        return { success: true, data: analytics };
+        return { success: true, data };
       } else {
         return { success: false, message: data.message };
       }
     } catch (error) {
+      console.error("Error in getUserAnalytics:", error);
       return { success: false, message: error.message };
     }
   }
 
-  // Process user data for analytics using real timestamps
+  // Process user data for analytics using real timestamps (fallback method)
   processUserAnalytics(users) {
     const now = new Date();
     const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -223,25 +268,9 @@ class UserService {
     return dailyCount;
   }
 
-  // Get user analytics from backend
+  // Get user analytics from backend (alias for getUserAnalytics)
   async getUserAnalyticsFromBackend() {
-    try {
-      const response = await fetch(`${API_BASE_URL}/analytics/users`, {
-        method: "GET",
-        headers: this.getAuthHeaders(),
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        return { success: true, data };
-      } else {
-        return { success: false, message: data.message };
-      }
-    } catch (error) {
-      return { success: false, message: error.message };
-    }
+    return this.getUserAnalytics();
   }
 }
 

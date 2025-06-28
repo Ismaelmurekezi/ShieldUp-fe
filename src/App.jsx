@@ -11,6 +11,8 @@ import DashboardRouteGuard from "./components/DashboardRouteGuard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/AdminDashboard/Dashboard";
 import DashboardLayout from "./components/DashboardLayout";
+import { ToastContainer } from "react-toastify";
+
 
 // Unauthorized page component
 const Unauthorized = () => (
@@ -38,9 +40,9 @@ function App() {
         <Route
           path="/register"
           element={
-            <ProtectedRoute allowedRoles={["SuperAdmin"]}>
-              <Register />
-            </ProtectedRoute>
+            // <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <Register />
+            // </ProtectedRoute>
           }
         />
 
@@ -78,6 +80,17 @@ function App() {
         {/* Not found route */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Router>
   );
 }
