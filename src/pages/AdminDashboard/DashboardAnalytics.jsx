@@ -2,41 +2,97 @@
 
 import { useEffect } from "react";
 import Chart from "react-apexcharts";
-import { TrendingUp, Users } from "lucide-react";
+import { TrendingUp, Users, AlertCircle } from "lucide-react";
 import useAuthStore from "../../store/authStore";
 
 const DashboardAnalytics = () => {
-  const { user, isSuperAdmin, userAnalytics, fetchUserAnalytics, isLoading } =
-    useAuthStore();
+  const { 
+    user, 
+    isSuperAdmin, 
+    userAnalytics, 
+    fetchUserAnalytics, 
+    messageAnalytics,
+    fetchMessageAnalytics,
+    isLoading 
+  } = useAuthStore();
   const isSuper = isSuperAdmin();
 
   // Fetch analytics data on component mount
   useEffect(() => {
     if (isSuper) {
       fetchUserAnalytics();
+    } else {
+      fetchMessageAnalytics();
     }
   }, [isSuper]);
 
   // Admin Analytics - Theft Related Charts
   const AdminAnalytics = () => {
-    // Data for the Bar Chart (Theft Analytics)
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
+        </div>
+      );
+    }
+
+    // Generate month labels for the last 12 months
+    const generateMonthLabels = () => {
+      const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+      const now = new Date();
+      const labels = [];
+
+      for (let i = 11; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        labels.push(
+          `${months[date.getMonth()]} ${date.getFullYear().toString().slice(-2)}`
+        );
+      }
+
+      return labels;
+    };
+
+    // Process crime data by type and month
+    const processMonthlyCrimeData = () => {
+      if (!messageAnalytics?.crimeTypesByMonth) {
+        return {
+          burglary: Array(12).fill(0),
+          armedRobbery: Array(12).fill(0),
+          theft: Array(12).fill(0)
+        };
+      }
+
+      const result = {
+        burglary: Array(12).fill(0),
+        armedRobbery: Array(12).fill(0),
+        theft: Array(12).fill(0)
+      };
+
+      messageAnalytics.crimeTypesByMonth.forEach(monthData => {
+        const monthIndex = monthData.monthIndex;
+        result.burglary[monthIndex] = monthData.burglary || 0;
+        result.armedRobbery[monthIndex] = monthData.armedRobbery || 0;
+        result.theft[monthIndex] = monthData.theft || 0;
+      });
+
+      return result;
+    };
+
+    const monthlyCrimeData = processMonthlyCrimeData();
+
+    // Data for the Bar Chart (Monthly Crime Analytics by Type)
     const barChartOptions = {
       chart: {
         id: "analytic-bar-chart",
         toolbar: { show: false },
       },
       xaxis: {
-        categories: [
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-        ],
+        categories: generateMonthLabels(),
+        tickAmount: 12,
+        labels: { rotate: -45 },
       },
       colors: ["#4CAF50", "#00BCD4", "#FFC107"],
       plotOptions: {
@@ -53,36 +109,44 @@ const DashboardAnalytics = () => {
         colors: ["transparent"],
       },
       yaxis: {
-        title: { text: "Kind of theft" },
+        title: { text: "Number of Cases" },
       },
       fill: { opacity: 1 },
       tooltip: {
         y: {
-          formatter: (val) => val + " cases",
+          formatter: (val) => `${val} cases`,
         },
       },
     };
 
     const barChartSeries = [
       {
-        name: "Burglaries",
-        data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
+        name: "Burglary",
+        data: monthlyCrimeData.burglary,
       },
       {
-        name: "Armed Robberies",
-        data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
+        name: "Armed Robbery",
+        data: monthlyCrimeData.armedRobbery,
       },
       {
-        name: "Thefts",
-        data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
+        name: "Theft",
+        data: monthlyCrimeData.theft,
       },
     ];
 
-    // Data for the Pie Chart (Theft Types)
+    // Prepare crime types data for pie chart
+    const crimeTypesData = messageAnalytics?.crimeTypes 
+      ? Object.entries(messageAnalytics.crimeTypes).map(([name, value]) => ({
+          name,
+          value
+        }))
+      : [];
+
+    // Data for the Pie Chart (Crime Types)
     const pieChartOptions = {
       chart: { type: "donut" },
-      labels: ["Burglary", "Armed robbery", "Theft"],
-      colors: ["#EF4444", "#3B82F6", "#F59E0B"],
+      labels: crimeTypesData.map(item => item.name),
+      colors: ["#EF4444", "#3B82F6", "#F59E0B", "#10B981", "#8B5CF6"],
       responsive: [
         {
           breakpoint: 480,
@@ -111,8 +175,7 @@ const DashboardAnalytics = () => {
               total: {
                 show: true,
                 label: "Total",
-                formatter: (w) =>
-                  w.globals.seriesTotals.reduce((a, b) => a + b, 0),
+                formatter: () => messageAnalytics?.totalMessages || 0,
               },
             },
           },
@@ -120,25 +183,40 @@ const DashboardAnalytics = () => {
       },
     };
 
-    const pieChartSeries = [44, 55, 13];
+    const pieChartSeries = crimeTypesData.map(item => item.value);
 
-    // Data for the Line Chart (Monthly Theft Trend)
+    // Generate day labels for the last 7 days
+    const generateDayLabels = () => {
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const now = new Date();
+      const labels = [];
+
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(now);
+        date.setDate(now.getDate() - i);
+        labels.push(`${days[date.getDay()]} ${date.getDate()}`);
+      }
+
+      return labels;
+    };
+
+    // Data for the Line Chart (Weekly Crime Trend)
     const lineChartOptions = {
       chart: {
-        id: "theft-trend-chart",
+        id: "crime-trend-chart",
         toolbar: { show: false },
         zoom: { enabled: false },
       },
       xaxis: {
-        categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        categories: generateDayLabels(),
         tickAmount: 7,
         labels: { rotate: -45 },
       },
       yaxis: {
-        title: { text: "Theft Cases" },
-        min: 50,
-        max: 250,
-        tickAmount: 4,
+        title: { text: "Crime Cases" },
+        min: 0,
+        max: Math.max(...(messageAnalytics?.weeklyData || [0])) + 2,
+        tickAmount: 5,
       },
       colors: ["#3B82F6"],
       stroke: {
@@ -153,7 +231,9 @@ const DashboardAnalytics = () => {
         },
       },
       tooltip: {
-        x: { format: "dd/MM/yy HH:mm" },
+        y: {
+          formatter: (val) => `${val} cases`,
+        },
       },
       markers: { size: 0 },
       fill: {
@@ -169,8 +249,8 @@ const DashboardAnalytics = () => {
 
     const lineChartSeries = [
       {
-        name: "Theft Cases",
-        data: [150, 200, 180, 160, 170, 190],
+        name: "Crime Cases",
+        data: messageAnalytics?.weeklyData || Array(7).fill(0),
       },
     ];
 
@@ -181,31 +261,50 @@ const DashboardAnalytics = () => {
           <div className="bg-[#B6FFA1] p-6 rounded-lg shadow-md flex items-center justify-between">
             <div>
               <p className="text-xl font-semibold text-gray-700">
-                Weekly Thefts
+                Weekly Cases
               </p>
-              <p className="text-3xl font-bold text-green-700 mt-2">23</p>
+              <p className="text-3xl font-bold text-green-700 mt-2">
+                {messageAnalytics?.weeklyMessages || 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">Last 7 days</p>
             </div>
-            <TrendingUp size={35} className="text-gray-400" />
+            <AlertCircle size={35} className="text-gray-400" />
           </div>
 
           <div className="bg-teal-100 p-6 rounded-lg shadow-md flex items-center justify-between">
             <div>
               <p className="text-xl font-semibold text-gray-700">
-                Monthly Thefts
+                Monthly Cases
               </p>
-              <p className="text-3xl font-bold text-teal-700 mt-2">89</p>
-          
+              <p className="text-3xl font-bold text-teal-700 mt-2">
+                {messageAnalytics?.monthlyMessages || 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">Last 30 days</p>
             </div>
-            <TrendingUp size={35} className="text-gray-400" />
+            <AlertCircle size={35} className="text-gray-400" />
+          </div>
+
+          <div className="bg-[#FFFC99] p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+              <p className="text-xl font-semibold text-gray-700">Total Cases</p>
+              <p className="text-3xl font-bold text-yellow-700 mt-2">
+                {messageAnalytics?.totalMessages || 0}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">All time</p>
+            </div>
+            <AlertCircle size={35} className="text-gray-400" />
           </div>
         </div>
 
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          THEFT ANALYTICS
+          CRIME ANALYTICS
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Bar Chart */}
           <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Monthly Crime Cases by Type
+            </h3>
             <Chart
               options={barChartOptions}
               series={barChartSeries}
@@ -217,7 +316,7 @@ const DashboardAnalytics = () => {
           {/* Pie Chart */}
           <div className="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center items-center">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              THEFT TYPES
+              CRIME TYPES DISTRIBUTION
             </h3>
             <Chart
               options={pieChartOptions}
@@ -232,7 +331,7 @@ const DashboardAnalytics = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-2xl text-primary font-semibold mb-4">
-              Weekly Theft Trend
+              Weekly Crime Trend
             </h3>
             <Chart
               options={lineChartOptions}
@@ -241,6 +340,43 @@ const DashboardAnalytics = () => {
               height={300}
             />
           </div>
+
+          {/* Growth Rate Card */}
+          {messageAnalytics?.messageGrowthRate && (
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Growth Rate
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Weekly Growth:</span>
+                  <span
+                    className={`font-semibold ${
+                      messageAnalytics.messageGrowthRate.weekly > 0
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {messageAnalytics.messageGrowthRate.weekly > 0 ? "+" : ""}
+                    {messageAnalytics.messageGrowthRate.weekly}%
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Monthly Growth:</span>
+                  <span
+                    className={`font-semibold ${
+                      messageAnalytics.messageGrowthRate.monthly > 0
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {messageAnalytics.messageGrowthRate.monthly > 0 ? "+" : ""}
+                    {messageAnalytics.messageGrowthRate.monthly}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

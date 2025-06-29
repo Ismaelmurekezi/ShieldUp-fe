@@ -22,13 +22,13 @@ const Home = ({ onNavigate }) => {
       </div>
       {/* Header */}
       <header className="relative z-10 flex justify-between items-center p-6 md:p-8">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1">
           <img
             src="/logo.png"
             alt="ShieldUp Logo"
             className="h-20 w-20 object-contain"
           />
-          <span className="text-xs font-bold text-teal-400">SHIELDUP</span>{" "}
+          <span className="text-sm font-bold text-teal-400">Ibhews</span>{" "}
           {/* Based on the logo's color in your design */}
         </div>
         <nav className="space-x-4">
@@ -48,10 +48,10 @@ const Home = ({ onNavigate }) => {
       {/* Main Content Area */}
       <main className="relative z-10 flex-grow flex items-center justify-center p-6 md:p-12 text-center">
         <div className="max-w-3xl space-y-6">
-          <span className="text-4xl md:text-3xl font-semibold leading-relaxed">
+          <h1 className="text-4xl md:text-3xl font-semibold leading-relaxed">
             IoT based Home Early
-            <span className="text-teal-400 pl-3">Warning system</span>
-          </span>
+            <h1 className="text-teal-400 pl-3">Warning system</h1>
+          </h1>
           <p className="text-lg md:text-xl leading-relaxed text-gray-300">
             Lorem Ipsum is simply dummy text of the printing and type setting
             industry. Lorem Ipsum has been the industry's standard dummy text

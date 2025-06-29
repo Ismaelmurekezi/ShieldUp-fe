@@ -112,7 +112,7 @@ const Login = () => {
         {/* Right Section (Form) */}
         <div className="w-full md:w-1/2 p-8 flex flex-col pt-8">
           <h2 className="text-2xl font-semibold text-primary mb-6 text-center">
-            WELCOME BACK TO SHIELDUP
+            WELCOME BACK TO IBHEWS
           </h2>
 
           {/* Error Message */}

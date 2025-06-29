@@ -99,6 +99,25 @@ class MessageService {
       return { success: false, message: error.message };
     }
   }
+  async getMessageAnalytics() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/analytics/messages`, {
+        method: "GET",
+        headers: this.getAuthHeaders(),
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return { success: true, data };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
 }
 
 export default new MessageService();
