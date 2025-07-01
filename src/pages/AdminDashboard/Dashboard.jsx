@@ -7,6 +7,7 @@ import UserDetailsModal from "../../components/UserDetailModal";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import MessageDetailsModal from "../../components/MessageDetailsModal";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const {
@@ -374,7 +375,7 @@ const Dashboard = () => {
 
   // SuperAdmin Dashboard Content (unchanged)
   const SuperAdminDashboard = () => (
-    <div className="pb-6">
+    <div className="pb-6 relative">
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">
         Hi {user?.username || "SuperAdmin"} ! Welcome back
       </h1>
@@ -411,9 +412,10 @@ const Dashboard = () => {
           <Users size={35} className="text-gray-400" />
         </div>
       </div>
+      <Link to="/register" className="bg-primary p-3 mb-24 rounded-md text-white font-semibold text-lg absolute right-2 ">+ Add user</Link>
 
       {/* Recent Users Table */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 mt-24 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Recent Users
         </h2>

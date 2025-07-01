@@ -2,9 +2,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import userService from "../services/userService";
 import messageService from "../services/messageService";
+import { useEffect } from "react";
 
-const API_BASE_URL =
-  import.meta.env.REACT_APP_API_BASE_URL || "http://localhost:5000"; 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const useAuthStore = create(
   persist(
@@ -58,6 +59,7 @@ const useAuthStore = create(
         try {
           const response = await fetch(`${API_BASE_URL}/login`, {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },

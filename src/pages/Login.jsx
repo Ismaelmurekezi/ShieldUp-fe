@@ -9,6 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login, isLoading, error, clearError, isAuthenticated, user } =
     useAuthStore();
+  
 
   const [formData, setFormData] = useState({
     email: "",
@@ -21,6 +22,7 @@ const Login = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       navigate("/dashboard");
+      console.log()
     }
   }, [isAuthenticated, user, navigate]);
 
