@@ -1,13 +1,20 @@
-
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "https://ibhews.onrender.com";
 
 class UserService {
   // Get authorization headers
   getAuthHeaders() {
-    return {
+    const headers = {
       "Content-Type": "application/json",
     };
+
+    // Add Authorization header as fallback if cookie doesn't work
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    return headers;
   }
 
   // Get all users with pagination

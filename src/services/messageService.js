@@ -4,9 +4,17 @@ const API_BASE_URL =
 class MessageService {
   // Get authorization headers
   getAuthHeaders() {
-    return {
+    const headers = {
       "Content-Type": "application/json",
     };
+
+    // Add Authorization header as fallback if cookie doesn't work
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    return headers;
   }
 
   // Get all messages with pagination

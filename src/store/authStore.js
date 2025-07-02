@@ -2,10 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import userService from "../services/userService";
 import messageService from "../services/messageService";
-import { useEffect } from "react";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL||"https://ibhews.onrender.com";
-
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "https://ibhews.onrender.com";
 
 const useAuthStore = create(
   persist(
@@ -70,8 +69,25 @@ const useAuthStore = create(
           const data = await response.json();
 
           if (response.ok) {
+            // Store token as fallback for when cookies don't work
+            if (data.token) {
+              localStorage.setItem("access_token", data.token);
+            }
+
+            // Debug: Test if cookie was set
+            try {
+              const testResponse = await fetch(`${API_BASE_URL}/debug/auth`, {
+                credentials: "include",
+              });
+              const debugData = await testResponse.json();
+              console.log("Cookie debug info:", debugData);
+            } catch (error) {
+              console.error("Debug request failed:", error);
+            }
+
             set({
               user: data.user,
+              token: data.token, // Store token in state
               isAuthenticated: true,
               isLoading: false,
               error: null,
@@ -145,6 +161,9 @@ const useAuthStore = create(
         } catch (error) {
           console.error("Logout error:", error);
         } finally {
+          // Clear localStorage token
+          localStorage.removeItem("access_token");
+
           set({
             user: null,
             token: null,
