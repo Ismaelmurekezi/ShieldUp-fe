@@ -285,7 +285,7 @@ const Register = () => {
           <div className="mt-4 text-center">
             <button
               onClick={() => navigate("/dashboard")}
-              className="text-teal-500 hover:text-teal-600 text-sm"
+              className=" w-full text-teal-500 py-2 px-4 border-2 rounded-md border-primary hover:text-teal-600 text-sm"
             >
               Back to Dashboard
             </button>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Shield, MapPin, Wifi, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import TypewriterEffect from "react-typewriter-effect";
 
 const Home = ({ onNavigate }) => {
   return (
@@ -26,10 +26,11 @@ const Home = ({ onNavigate }) => {
           <img
             src="/logo.png"
             alt="ShieldUp Logo"
-            className="h-20 w-20 object-contain"
+            className="h-15 w-15 object-contain"
           />
-          <span className="text-sm font-bold text-teal-400">Ibhews</span>{" "}
-          {/* Based on the logo's color in your design */}
+          <span className="text-sm font-bold text-teal-400 uppercase">
+            IBHEWS
+          </span>{" "}
         </div>
         <nav className="space-x-4">
           {/* <Link to="/login">
@@ -48,15 +49,30 @@ const Home = ({ onNavigate }) => {
       {/* Main Content Area */}
       <main className="relative z-10 flex-grow flex items-center justify-center p-6 md:p-12 text-center">
         <div className="max-w-3xl space-y-6">
-          <h1 className="text-4xl md:text-3xl font-semibold leading-relaxed">
-            IoT based Home Early
-            <h1 className="text-teal-400 pl-3">Warning system</h1>
+          <h1 className="text-5xl md:text-4xl font-semibold leading-relaxed">
+            IoT based{" "}
+            <span className="text-teal-400 inline-flex h-10 items-center">
+              <TypewriterEffect
+                textStyle={{
+                  fontFamily: "inherit",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                  display: "inline",
+                }}
+                startDelay={500}
+                cursorColor="#2DD4BF"
+                multiText={["Home Early Warning System", "Warning System"]}
+                multiTextDelay={2000}
+                typeSpeed={30}
+                deleteSpeed={20}
+                multiTextLoop={true}
+              />
+            </span>
           </h1>
           <p className="text-lg md:text-xl leading-relaxed text-gray-300">
-            Lorem Ipsum is simply dummy text of the printing and type setting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Monitor and detect thefts in your sector with our intuitive
+            dashboard. Easily track incidents, generate detailed reports, and
+            access analytics to enhance security and community safety.
           </p>
         </div>
       </main>

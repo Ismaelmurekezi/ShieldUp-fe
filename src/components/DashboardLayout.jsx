@@ -75,7 +75,7 @@ const DashboardLayout = ({ children }) => {
               className="h-10 w-10 mr-2"
             />
             <span className="text-xl font-semibold text-teal-400">
-              Ibhews
+             IBHEWS
             </span>
           </Link>
 

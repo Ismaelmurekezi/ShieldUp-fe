@@ -5,6 +5,7 @@ import { Users, Eye, Trash2, MoreVertical } from "lucide-react";
 import useAuthStore from "../../store/authStore";
 import UserDetailsModal from "../../components/UserDetailModal";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
+import { toast } from "react-toastify";
 
 const UserReport = () => {
   const {
@@ -52,7 +53,7 @@ const UserReport = () => {
       if (result.success) {
         setShowDeleteModal(false);
         setUserToDelete(null);
-        alert("User deleted successfully!");
+        toast.success("User deleted successfully!");
       } else {
         alert(`Error: ${result.message}`);
       }

@@ -74,11 +74,11 @@ const MessageDetailsModal = ({ message, isOpen, onClose, onMarkAsRead }) => {
 
   return (
     <div className="fixed inset-0 backdrop-blur-md bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white border-[1px] border-gray-300 rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Message Details
+          <h2 className="text-xl font-semibold text-primary">
+            MESSAGE DETAILS
           </h2>
           <button
             onClick={onClose}
@@ -110,7 +110,7 @@ const MessageDetailsModal = ({ message, isOpen, onClose, onMarkAsRead }) => {
           </div>
 
           {/* Crime Information */}
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+          <div className="bg-red-50 p-4 rounded-lg border border-red-100">
             <h3 className="text-lg font-semibold text-red-800 mb-2">
               Crime Alert
             </h3>
@@ -129,7 +129,7 @@ const MessageDetailsModal = ({ message, isOpen, onClose, onMarkAsRead }) => {
                 <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                   R
                 </div>
-                <div>
+                <div> 
                   <p className="text-sm text-red-600">Reported By</p>
                   <p className="font-medium text-red-800">
                     {payload.from || "Anonymous"}

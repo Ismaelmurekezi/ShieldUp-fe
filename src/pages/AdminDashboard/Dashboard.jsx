@@ -412,7 +412,7 @@ const Dashboard = () => {
           <Users size={35} className="text-gray-400" />
         </div>
       </div>
-      <Link to="/register" className="bg-primary p-3 mb-24 rounded-md text-white font-semibold text-lg absolute right-2 ">+ Add user</Link>
+      <Link to="/register" className="bg-primary px-3 py-2   mb-24 rounded-md text-white font-semibold text-lg absolute right-2 ">+ Add user</Link>
 
       {/* Recent Users Table */}
       <div className="bg-white p-6 mt-24 rounded-lg shadow-md">

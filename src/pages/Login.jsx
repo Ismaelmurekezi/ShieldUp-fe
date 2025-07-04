@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, AlertTriangle, Loader2 } from "lucide-react";
 import useAuthStore from "../store/authStore";
 import deviceImage from "../assets/ShieldUp2.jpeg";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -163,6 +164,9 @@ const Login = () => {
                 </p>
               )}
             </div>
+            <Link className="text-xs text-right text-gray-500 hover:text-gray-600">
+              <p className="pb-4">Forget password</p>
+            </Link>
 
             {/* Login Button */}
             <button
@@ -184,9 +188,9 @@ const Login = () => {
           <div className="mt-4 text-center">
             <button
               onClick={() => navigate("/")}
-              className="text-teal-500 hover:text-teal-600 text-sm"
+              className="text-teal-500 hover:text-teal-600 text-sm border-2 border-primary font-semibold w-full py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 transition duration-300"
             >
-              Back to Home
+              BACK TO HOME
             </button>
           </div>
         </div>
