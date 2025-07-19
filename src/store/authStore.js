@@ -4,7 +4,7 @@ import userService from "../services/userService";
 import messageService from "../services/messageService";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://ibhews.onrender.com";
+  import.meta.env.VITE_API_BASE_URL || " https://ibhews.onrender.com";
 
 const useAuthStore = create(
   persist(

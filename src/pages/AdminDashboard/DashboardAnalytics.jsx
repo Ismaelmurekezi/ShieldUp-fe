@@ -342,7 +342,7 @@ const DashboardAnalytics = () => {
           </div>
 
           {/* Growth Rate Card */}
-          {messageAnalytics?.messageGrowthRate && (
+          {/*messageAnalytics?.messageGrowthRate && (
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">
                 Growth Rate
@@ -376,7 +376,7 @@ const DashboardAnalytics = () => {
                 </div>
               </div>
             </div>
-          )}
+          ) */}
         </div>
       </div>
     );
